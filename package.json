@@ -4,7 +4,9 @@
   "description": "Web framework where streams is the central abstraction.",
   "main": "index.js",
   "scripts": {
-    "test": "find . -not -path \"*node_modules*\" -iname *spec.js | xargs mocha"
+    "format" : "standard --format",
+    "mocha": "find . -not -path \"*node_modules*\" -iname *spec.js | xargs mocha",
+    "test" : "npm run format && npm run mocha"
   },
   "repository": {
     "type": "git",
@@ -23,6 +25,7 @@
   },
   "homepage": "https://github.com/Neppord/riverbank",
   "devDependencies": {
-    "mocha": "^2.2.5"
+    "mocha": "^2.2.5",
+    "standard": "^5.0.0-2"
   }
 }
