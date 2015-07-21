@@ -1,0 +1,28 @@
+{
+  "name": "riverbank",
+  "version": "0.0.0",
+  "description": "Web framework where streams is the central abstraction.",
+  "main": "index.js",
+  "scripts": {
+    "test": "find . -not -path \"*node_modules*\" -iname *spec.js | xargs mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Neppord/riverbank.git"
+  },
+  "keywords": [
+    "streams",
+    "html",
+    "templating",
+    "framework"
+  ],
+  "author": "Samuel Ytterbrink",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Neppord/riverbank/issues"
+  },
+  "homepage": "https://github.com/Neppord/riverbank",
+  "devDependencies": {
+    "mocha": "^2.2.5"
+  }
+}
