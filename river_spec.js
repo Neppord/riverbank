@@ -1,4 +1,4 @@
 /* global describe it */
-describe('riverbank', function () {
+describe('river', function () {
   it('makes raw templating easy.')
 })
