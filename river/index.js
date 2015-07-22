@@ -21,24 +21,24 @@ function _river (start, end) {
   start.pipe(end)
 
   self.find = function find (selector) {
-    last.unpipe(end)
-    last = last.pipe(find_stream(selector))
-    last.pipe(end)
+    push(find_stream(selector))
     return self
   }
 
   self.replace = function replace (selector, cb) {
-    last.unpipe(end)
-    last = last.pipe(replace_stream.outer(selector, cb))
-    last.pipe(end)
+    push(replace_stream.outer(selector, cb))
     return self
   }
 
   self.replace.inner = function replace (selector, cb) {
-    last.unpipe(end)
-    last = last.pipe(replace_stream.inner(selector, cb))
-    last.pipe(end)
+    push(replace_stream.inner(selector, cb))
     return self
+  }
+
+  function push (stream) {
+    last.unpipe(end)
+    last = last.pipe(stream)
+    last.pipe(end)
   }
 
   return self
