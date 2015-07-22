@@ -29,7 +29,14 @@ function _river (start, end) {
 
   self.replace = function replace (selector, cb) {
     last.unpipe(end)
-    last = last.pipe(replace_stream(selector, {}, cb))
+    last = last.pipe(replace_stream.outer(selector, cb))
+    last.pipe(end)
+    return self
+  }
+
+  self.replace.inner = function replace (selector, cb) {
+    last.unpipe(end)
+    last = last.pipe(replace_stream.inner(selector, cb))
     last.pipe(end)
     return self
   }

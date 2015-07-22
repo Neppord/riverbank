@@ -28,10 +28,22 @@ describe('river', function () {
       done()
     })
   })
-  it('makes replacing a subtemplate easy', function (done) {
+  it('makes replacing a element easy', function (done) {
     var template = river()
     template.replace('h1', function (subtemplate) {
       return river.open_right('<h1>Hello Riverbank</h1>')
+    })
+    template.end(html)
+    h(template).toArray(function (fragments) {
+      var text = fragments.join('')
+      expect(text).to.deep.equal(hello_riverbank)
+      done()
+    })
+  })
+  it('makes replacing content of elements easy', function (done) {
+    var template = river()
+    template.replace.inner('h1', function (subtemplate) {
+      return river.open_right('Hello Riverbank')
     })
     template.end(html)
     h(template).toArray(function (fragments) {
