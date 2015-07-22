@@ -4,7 +4,6 @@ var expect = require('chai').expect
 var h = require('highland')
 
 var river = require('./')
-var start_stream = require('./start')
 
 var html = '<html><body><h1>Hello World</h1></body></html>'
 var h1 = '<h1>Hello World</h1>'
@@ -32,7 +31,7 @@ describe('river', function () {
   it('makes replacing a subtemplate easy', function (done) {
     var template = river()
     template.replace('h1', function (subtemplate) {
-      return h(['<h1>Hello Riverbank</h1>']).pipe(start_stream())
+      return river.open_right('<h1>Hello Riverbank</h1>')
     })
     template.end(html)
     h(template).toArray(function (fragments) {
