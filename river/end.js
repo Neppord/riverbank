@@ -1,9 +1,9 @@
 var through = require('through2')
 module.exports = function () {
-  return through.obj(pass_trhough)
+  return through.obj(push_second_index)
 }
 
-function pass_trhough (token, enc, next) {
+function push_second_index (token, enc, next) {
   this.push(token[1])
   next()
 }
