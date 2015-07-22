@@ -1,24 +1,21 @@
 var duplexer = require('duplexer2')
-var tokenizer = require('html-tokenize')
-var through = require('through2')
 
 var find_stream = require('./find')
+var start_stream = require('./start')
+var end_stream = require('./end')
 
 module.exports = function () {
   var last
-  var t = last = tokenizer()
-  var s = through.obj(function (token, enc, next) {
-    this.push(token[1])
-    next()
-  })
-  var self = duplexer(t, s)
+  var start = last = start_stream()
+  var end = end_stream()
+  var self = duplexer(start, end)
 
-  t.pipe(s)
+  start.pipe(end)
 
   self.find = function find (selector) {
-    last.unpipe(s)
+    last.unpipe(end)
     last = last.pipe(find_stream(selector))
-    last.pipe(s)
+    last.pipe(end)
     return self
   }
 
