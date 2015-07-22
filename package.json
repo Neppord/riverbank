@@ -27,7 +27,14 @@
   "homepage": "https://github.com/Neppord/riverbank",
   "devDependencies": {
     "chai": "^3.2.0",
+    "highland": "^2.5.1",
     "mocha": "^2.2.5",
     "standard": "^5.0.0-2"
+  },
+  "dependencies": {
+    "duplexer2": "0.0.2",
+    "html-select": "^2.3.24",
+    "html-tokenize": "^1.2.5",
+    "through2": "^2.0.0"
   }
 }
