@@ -8,6 +8,20 @@ var river = require('./')
 var html = '<html><body><h1>Hello World</h1></body></html>'
 var h1 = '<h1>Hello World</h1>'
 var hello_riverbank = '<html><body><h1>Hello Riverbank</h1></body></html>'
+var pet_template = (
+  '<div class="pet">' +
+  '<h1 class="pet-name"></h1>' +
+  '<div class="pet-type"></div>' +
+  '<div class="pet-age"></div>' +
+  '</div>'
+)
+var fluffy_puff_html = (
+  '<div class="pet">' +
+  '<h1 class="pet-name">Fluffy Puff</h1>' +
+  '<div class="pet-type">Rabbit</div>' +
+  '<div class="pet-age">3</div>' +
+  '</div>'
+)
 
 describe('river', function () {
   it('makes raw templating easy', function (done) {
@@ -52,5 +66,21 @@ describe('river', function () {
       done()
     })
   })
+  it('makes replacing multiple of content easy', function (done) {
+    var template = river(pet_template)
+    template.replace.inner('.pet-name', function () {
+      return river.open_right('Fluffy Puff')
+    })
+    template.replace.inner('.pet-type', function () {
+      return river.open_right('Rabbit')
+    })
+    template.replace.inner('.pet-age', function () {
+      return river.open_right('3')
+    })
+    h(template).toArray(function (fragments) {
+      var text = fragments.join('')
+      expect(text).to.deep.equal(fluffy_puff_html)
+      done()
+    })
+  })
 })
-
