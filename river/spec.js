@@ -2,6 +2,7 @@
 var expect = require('chai').expect
 
 var h = require('highland')
+var through = require('through2')
 
 var river = require('./')
 
@@ -83,4 +84,28 @@ describe('river', function () {
       done()
     })
   })
+  it.skip('makes mapping over data with a template easy', function (done) {
+    var template = river(pet_template)
+      .map(function (t, data) {
+        return t.replace.inner('.pet-name', function () {
+          return river.open_right(data.name)
+        }).replace.inner('.pet-type', function () {
+          return river.open_right(data.type)
+        }).replace.inner('.pet-age', function () {
+          return river.open_right(data.age.toString())
+        })
+      })
+    pet_stream().pipe(template)
+    h(template).toArray(function (fragments) {
+      var text = fragments.join('')
+      expect(text).to.deep.equal(fluffy_puff_html)
+      done()
+    })
+  })
 })
+
+function pet_stream () {
+  var stream = through.obj()
+  stream.end({name: 'Fluffy Puff', type: 'Rabbit', age: 3})
+  return stream
+}
