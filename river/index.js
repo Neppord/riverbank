@@ -5,7 +5,7 @@ var replace_stream = require('./replace')
 var start_stream = require('./start')
 var end_stream = require('./end')
 
-module.exports = function () {
+module.exports = function (text) {
   var last
   var start = last = start_stream()
   var end = end_stream()
@@ -25,6 +25,6 @@ module.exports = function () {
     last.pipe(end)
     return self
   }
-
+  if (text) self.end(text)
   return self
 }
