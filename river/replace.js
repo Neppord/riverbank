@@ -1,4 +1,5 @@
 var select = require('html-select')
+var river = require('./')
 
 replace.inner = inner
 replace.outer = outer
@@ -7,7 +8,7 @@ module.exports = replace
 function replace (selector, opts, cb) {
   return select(selector, function (elem) {
     var stream = elem.createStream(opts)
-    cb(stream).pipe(stream)
+    cb(river.mixin(stream)).pipe(stream)
   })
 }
 

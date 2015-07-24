@@ -1,17 +1,19 @@
-var through = require('through2')
+var h = require('highland')
+var repeat = require('./repeat')
+var river = require('./')
 
 module.exports = map
 
 function map (template, callback) {
-  return through.obj(function (obj, enc, next) {
-    var self = this
-    var results = callback(template, obj)
-    results.on('data', function (data) {
-      self.push(data)
+  var stream_of_templates = h(template)
+    .collect().flatMap(repeat).map(function (array) {
+      return river.mixin(h(array))
     })
-    results.on('end', function (data) {
-      if (data) self.push(data)
-      next()
-    })
+  return h.pipeline(function (s) {
+    return s
+      .zip(stream_of_templates)
+      .flatMap(function (pair) {
+        return callback(pair[1], pair[0]).pipe(h())
+      })
   })
 }

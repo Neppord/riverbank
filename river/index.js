@@ -1,79 +1,43 @@
-var duplexer = require('duplexer2')
 var through = require('through2')
 
 // Need to export before we include if they include us
-module.exports = closed
+module.exports = river
+river.parse = parse
+river.mixin = mixin
 
 var find_stream = require('./find')
-var map_stream = require('./map')
 var replace_stream = require('./replace')
-var start_stream = require('./start')
+var parse_stream = require('./start')
 var end_stream = require('./end')
+var map_stream = require('./map')
 
-var river = closed
-river._river = _river
-river.closed = closed
-river.open = open
-river.open_right = river.closed_left = open_right
-river.open_left = river.closed_right = open_left
-
-function _river (start, end) {
-  var last = start
-  var self = duplexer(start, end)
-
-  start.pipe(end)
-
+function mixin (self) {
   self.find = function find (selector) {
-    add_before_end(find_stream(selector))
-    return self
+    return mixin(self.pipe(find_stream(selector)))
   }
-
+  self.render = function render () {
+    return mixin(self.pipe(end_stream()))
+  }
   self.replace = function replace (selector, cb) {
-    add_before_end(replace_stream.outer(selector, cb))
-    return self
+    return mixin(self.pipe(replace_stream.outer(selector, cb)))
   }
-
-  self.replace.inner = function replace (selector, cb) {
-    add_before_end(replace_stream.inner(selector, cb))
-    return self
+  self.replace.inner = function replace_inner (selector, cb) {
+    return mixin(self.pipe(replace_stream.inner(selector, cb)))
   }
-
   self.map = function map (callback) {
-    var stream = map_stream(self.open_right(), callback)
-    return _river(stream, end_stream())
+    return mixin(map_stream(self, callback))
   }
-
-  self.open_right = function open_right () {
-    last.unpipe(end)
-    end.end()
-    return _river(last, through.obj())
-  }
-
-  function add_before_end (stream) {
-    last.unpipe(end)
-    last = last.pipe(stream)
-    last.pipe(end)
-  }
-
   return self
 }
 
-function closed (text) {
-  var river = _river(start_stream(), end_stream())
+function parse (text) {
+  var river = mixin(parse_stream())
   if (text) river.end(text)
   return river
 }
 
-function open_right (text) {
-  var river = _river(start_stream(), through.obj())
+function river (text) {
+  var river = mixin(through.obj())
   if (text) river.end(text)
   return river
-}
-
-function open () {
-  return _river(through.obj(), through.obj())
-}
-
-function open_left () {
-  return _river(through.obj(), end_stream())
 }

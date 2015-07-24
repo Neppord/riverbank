@@ -1,6 +1,8 @@
 var through = require('through2')
 module.exports = function () {
-  return through.obj(push_second_index)
+  var stream = through.obj(push_second_index)
+  stream.isClosed = true
+  return stream
 }
 
 function push_second_index (token, enc, next) {
